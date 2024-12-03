@@ -69,7 +69,8 @@ export class PumpFunSDK {
     commitment: Commitment = DEFAULT_COMMITMENT,
     finality: Finality = DEFAULT_FINALITY
   ): Promise<TransactionResult> {
-    let tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
+    // let tokenMetadata = await this.createTokenMetadata(createTokenMetadata);
+    let tokenMetadata = {metadataUri: "123123"};
 
     let createTx = await this.getCreateInstructions(
       creator.publicKey,

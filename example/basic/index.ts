@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { DEFAULT_DECIMALS, PumpFunSDK } from "../../src";
+import { DEFAULT_COMMITMENT, DEFAULT_DECIMALS, PumpFunSDK } from "../../src";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import {
@@ -49,8 +49,15 @@ const main = async () => {
 
   let sdk = new PumpFunSDK(provider);
 
-  let globalAccount = await sdk.getGlobalAccount();
-  console.log(globalAccount);
+  // const bondingCurveAccount = await sdk.getBondingCurveAccount(mint.publicKey, DEFAULT_COMMITMENT);
+  // console.log(bondingCurveAccount);
+  // bondingCurveAccount?.getBuyPrice();
+
+  // let globalAccount = await sdk.getGlobalAccount();
+  // console.log(globalAccount);
+
+  // console.log(globalAccount.getInitialBuyPrice(BigInt(0.0001 * LAMPORTS_PER_SOL)));
+  // return;
 
   let currentSolBalance = await connection.getBalance(testAccount.publicKey);
   if (currentSolBalance == 0) {
@@ -61,8 +68,6 @@ const main = async () => {
     return;
   }
 
-  console.log(await sdk.getGlobalAccount());
-
   //Check if mint already exists
   let boundingCurveAccount = await sdk.getBondingCurveAccount(mint.publicKey);
   if (!boundingCurveAccount) {
@@ -70,14 +75,14 @@ const main = async () => {
       name: "TST-7",
       symbol: "TST-7",
       description: "TST-7: This is a test token",
-      file: await fs.openAsBlob("example/basic/random.png"),
+      file: fs.readFileSync("example/basic/random.png").toString(),
     };
 
     let createResults = await sdk.createAndBuy(
       testAccount,
       mint,
       tokenMetadata,
-      BigInt(0.0001 * LAMPORTS_PER_SOL),
+      BigInt(0.001 * LAMPORTS_PER_SOL),
       SLIPPAGE_BASIS_POINTS,
       {
         unitLimit: 250000,
@@ -99,55 +104,55 @@ const main = async () => {
 
   if (boundingCurveAccount) {
     //buy 0.0001 SOL worth of tokens
-    let buyResults = await sdk.buy(
-      testAccount,
-      mint.publicKey,
-      BigInt(0.0001 * LAMPORTS_PER_SOL),
-      SLIPPAGE_BASIS_POINTS,
-      {
-        unitLimit: 250000,
-        unitPrice: 250000,
-      },
-    );
+    // let buyResults = await sdk.buy(
+    //   testAccount,
+    //   mint.publicKey,
+    //   BigInt(0.0001 * LAMPORTS_PER_SOL),
+    //   SLIPPAGE_BASIS_POINTS,
+    //   {
+    //     unitLimit: 250000,
+    //     unitPrice: 250000,
+    //   },
+    // );
 
-    if (buyResults.success) {
-      printSPLBalance(connection, mint.publicKey, testAccount.publicKey);
-      console.log("Bonding curve after buy", await sdk.getBondingCurveAccount(mint.publicKey));
-    } else {
-      console.log("Buy failed");
-    }
+    // if (buyResults.success) {
+    //   printSPLBalance(connection, mint.publicKey, testAccount.publicKey);
+    //   console.log("Bonding curve after buy", await sdk.getBondingCurveAccount(mint.publicKey));
+    // } else {
+    //   console.log("Buy failed");
+    // }
 
     //sell all tokens
-    let currentSPLBalance = await getSPLBalance(
-      connection,
-      mint.publicKey,
-      testAccount.publicKey
-    );
-    console.log("currentSPLBalance", currentSPLBalance);
-    if (currentSPLBalance) {
-      let sellResults = await sdk.sell(
-        testAccount,
-        mint.publicKey,
-        BigInt(currentSPLBalance * Math.pow(10, DEFAULT_DECIMALS)),
-        SLIPPAGE_BASIS_POINTS,
-        {
-          unitLimit: 250000,
-          unitPrice: 250000,
-        },
-      );
-      if (sellResults.success) {
-        await printSOLBalance(
-          connection,
-          testAccount.publicKey,
-          "Test Account keypair"
-        );
+    // let currentSPLBalance = await getSPLBalance(
+      // connection,
+      // mint.publicKey,
+      // testAccount.publicKey
+    // );
+    // console.log("currentSPLBalance", currentSPLBalance);
+    // if (currentSPLBalance) {
+      // let sellResults = await sdk.sell(
+        // testAccount,
+        // mint.publicKey,
+        // BigInt(currentSPLBalance * Math.pow(10, DEFAULT_DECIMALS)),
+        // SLIPPAGE_BASIS_POINTS,
+        // {
+          // unitLimit: 250000,
+          // unitPrice: 250000,
+        // },
+      // );
+      // if (sellResults.success) {
+        // await printSOLBalance(
+          // connection,
+          // testAccount.publicKey,
+          // "Test Account keypair"
+        // );
 
-        printSPLBalance(connection, mint.publicKey, testAccount.publicKey, "After SPL sell all");
-        console.log("Bonding curve after sell", await sdk.getBondingCurveAccount(mint.publicKey));
-      } else {
-        console.log("Sell failed");
-      }
-    }
+        // printSPLBalance(connection, mint.publicKey, testAccount.publicKey, "After SPL sell all");
+        // console.log("Bonding curve after sell", await sdk.getBondingCurveAccount(mint.publicKey));
+      // } else {
+        // console.log("Sell failed");
+      // }
+    // }
   }
 };
 

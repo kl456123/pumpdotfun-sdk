@@ -1,9 +1,13 @@
 import dotenv from "dotenv";
-import { Connection, Keypair } from "@solana/web3.js";
+import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { PumpFunSDK } from "../../src";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { AnchorProvider } from "@coral-xyz/anchor";
+import { getOrCreateKeypair, printSPLBalance } from '../util'
+import { CreateEvent } from '../../src/types'
 
+const KEYS_FOLDER = __dirname + "/.keys";
+const SLIPPAGE_BASIS_POINTS = 100n;
 const main = async () => {
   dotenv.config();
 
@@ -24,21 +28,41 @@ const main = async () => {
   });
 
   let sdk = new PumpFunSDK(provider);
+  const testAccount = getOrCreateKeypair(KEYS_FOLDER, "test-account");
 
-  let createEvent = sdk.addEventListener("createEvent", (event) => {
-    console.log("createEvent", event);
-  });
-  console.log("createEvent", createEvent);
+  let createEvent = sdk.addEventListener("createEvent", async (event: CreateEvent) => {
+      if(event.symbol=="kylia" || event.symbol=="zanoza") {
+      console.log(event)
+    let buyResults = await sdk.buy(
+      testAccount,
+      event.mint,
+      BigInt(0.0001 * LAMPORTS_PER_SOL),
+      SLIPPAGE_BASIS_POINTS,
+      {
+        unitLimit: 250000,
+        unitPrice: 250000,
+      },
+    );
 
-  let tradeEvent = sdk.addEventListener("tradeEvent", (event) => {
-    console.log("tradeEvent", event);
+    if (buyResults.success) {
+      printSPLBalance(connection, event.mint, testAccount.publicKey);
+      console.log("Bonding curve after buy", await sdk.getBondingCurveAccount(event.mint));
+    } else {
+      console.log("Buy failed");
+    }
+      }
   });
-  console.log("tradeEvent", tradeEvent);
+  // console.log("createEvent", createEvent);
 
-  let completeEvent = sdk.addEventListener("completeEvent", (event) => {
-    console.log("completeEvent", event);
-  });
-  console.log("completeEvent", completeEvent);
+  // let tradeEvent = sdk.addEventListener("tradeEvent", (event) => {
+    // console.log("tradeEvent", event);
+  // });
+  // console.log("tradeEvent", tradeEvent);
+
+  // let completeEvent = sdk.addEventListener("completeEvent", (event) => {
+    // console.log("completeEvent", event);
+  // });
+  // console.log("completeEvent", completeEvent);
 };
 
 main();
