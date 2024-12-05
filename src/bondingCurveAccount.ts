@@ -16,7 +16,7 @@ export class BondingCurveAccount {
     realTokenReserves: bigint,
     realSolReserves: bigint,
     tokenTotalSupply: bigint,
-    complete: boolean
+    complete: boolean,
   ) {
     this.discriminator = discriminator;
     this.virtualTokenReserves = virtualTokenReserves;
@@ -86,7 +86,7 @@ export class BondingCurveAccount {
   getFinalMarketCapSOL(feeBasisPoints: bigint): bigint {
     let totalSellValue = this.getBuyOutPrice(
       this.realTokenReserves,
-      feeBasisPoints
+      feeBasisPoints,
     );
     let totalVirtualValue = this.virtualSolReserves + totalSellValue;
     let totalVirtualTokens = this.virtualTokenReserves - this.realTokenReserves;
@@ -128,7 +128,7 @@ export class BondingCurveAccount {
       BigInt(value.realTokenReserves),
       BigInt(value.realSolReserves),
       BigInt(value.tokenTotalSupply),
-      value.complete
+      value.complete,
     );
   }
 }

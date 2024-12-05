@@ -27,7 +27,7 @@ export function getOrCreateKeypair(dir: string, keyName: string): Keypair {
       JSON.stringify({
         secretKey: bs58.encode(keypair.secretKey),
         publicKey: keypair.publicKey.toBase58(),
-      })
+      }),
     );
     return keypair;
   }
@@ -36,13 +36,13 @@ export function getOrCreateKeypair(dir: string, keyName: string): Keypair {
 export const printSOLBalance = async (
   connection: Connection,
   pubKey: PublicKey,
-  info: string = ""
+  info: string = "",
 ) => {
   const balance = await connection.getBalance(pubKey);
   console.log(
     `${info ? info + " " : ""}${pubKey.toBase58()}:`,
     balance / LAMPORTS_PER_SOL,
-    `SOL`
+    `SOL`,
   );
 };
 
@@ -50,7 +50,7 @@ export const getSPLBalance = async (
   connection: Connection,
   mintAddress: PublicKey,
   pubKey: PublicKey,
-  allowOffCurve: boolean = false
+  allowOffCurve: boolean = false,
 ) => {
   try {
     let ata = getAssociatedTokenAddressSync(mintAddress, pubKey, allowOffCurve);
@@ -64,13 +64,13 @@ export const printSPLBalance = async (
   connection: Connection,
   mintAddress: PublicKey,
   user: PublicKey,
-  info: string = ""
+  info: string = "",
 ) => {
   const balance = await getSPLBalance(connection, mintAddress, user);
   if (balance === null) {
     console.log(
       `${info ? info + " " : ""}${user.toBase58()}:`,
-      "No Account Found"
+      "No Account Found",
     );
   } else {
     console.log(`${info ? info + " " : ""}${user.toBase58()}:`, balance);

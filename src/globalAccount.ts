@@ -21,7 +21,7 @@ export class GlobalAccount {
     initialVirtualSolReserves: bigint,
     initialRealTokenReserves: bigint,
     tokenTotalSupply: bigint,
-    feeBasisPoints: bigint
+    feeBasisPoints: bigint,
   ) {
     this.discriminator = discriminator;
     this.initialized = initialized;
@@ -71,7 +71,7 @@ export class GlobalAccount {
       BigInt(value.initialVirtualSolReserves),
       BigInt(value.initialRealTokenReserves),
       BigInt(value.tokenTotalSupply),
-      BigInt(value.feeBasisPoints)
+      BigInt(value.feeBasisPoints),
     );
   }
 }

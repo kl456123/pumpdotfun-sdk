@@ -10,11 +10,14 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "esModuleInterop": true,
+    "lib": ["es2022", "esnext"],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
   "ts-node": {
     "compilerOptions": {
+      "target": "es2022",
+      "lib": ["es2022", "esnext"],
       "module": "commonjs"
     }
   }

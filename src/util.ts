@@ -1,5 +1,6 @@
 import {
   Commitment,
+  SystemProgram,
   ComputeBudgetProgram,
   Connection,
   Finality,
@@ -18,14 +19,14 @@ export const DEFAULT_FINALITY: Finality = "finalized";
 
 export const calculateWithSlippageBuy = (
   amount: bigint,
-  basisPoints: bigint
+  basisPoints: bigint,
 ) => {
   return amount + (amount * basisPoints) / 10000n;
 };
 
 export const calculateWithSlippageSell = (
   amount: bigint,
-  basisPoints: bigint
+  basisPoints: bigint,
 ) => {
   return amount - (amount * basisPoints) / 10000n;
 };
@@ -37,25 +38,45 @@ export async function sendTx(
   signers: Keypair[],
   priorityFees?: PriorityFee,
   commitment: Commitment = DEFAULT_COMMITMENT,
-  finality: Finality = DEFAULT_FINALITY
+  finality: Finality = DEFAULT_FINALITY,
+  useJito: boolean = true,
 ): Promise<TransactionResult> {
   let newTx = new Transaction();
 
   if (priorityFees) {
-    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-      units: priorityFees.unitLimit,
-    });
+    if (useJito) {
+      const tipAccount = new PublicKey(
+        "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+      );
+      const tipIx = SystemProgram.transfer({
+        fromPubkey: payer,
+        toPubkey: tipAccount,
+        lamports: Math.ceil(
+          (priorityFees.unitLimit * priorityFees.unitPrice) / 1e3,
+        ),
+      });
+      newTx.add(tipIx);
+    } else {
+      const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+        units: priorityFees.unitLimit,
+      });
 
-    const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: priorityFees.unitPrice,
-    });
-    newTx.add(modifyComputeUnits);
-    newTx.add(addPriorityFee);
+      const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: priorityFees.unitPrice,
+      });
+      newTx.add(modifyComputeUnits);
+      newTx.add(addPriorityFee);
+    }
   }
 
   newTx.add(tx);
 
-  let versionedTx = await buildVersionedTx(connection, payer, newTx, commitment);
+  let versionedTx = await buildVersionedTx(
+    connection,
+    payer,
+    newTx,
+    commitment,
+  );
   versionedTx.sign(signers);
 
   try {
@@ -94,10 +115,9 @@ export const buildVersionedTx = async (
   connection: Connection,
   payer: PublicKey,
   tx: Transaction,
-  commitment: Commitment = DEFAULT_COMMITMENT
+  commitment: Commitment = DEFAULT_COMMITMENT,
 ): Promise<VersionedTransaction> => {
-  const blockHash = (await connection.getLatestBlockhash(commitment))
-    .blockhash;
+  const blockHash = (await connection.getLatestBlockhash(commitment)).blockhash;
 
   let messageV0 = new TransactionMessage({
     payerKey: payer,
@@ -112,7 +132,7 @@ export const getTxDetails = async (
   connection: Connection,
   sig: string,
   commitment: Commitment = DEFAULT_COMMITMENT,
-  finality: Finality = DEFAULT_FINALITY
+  finality: Finality = DEFAULT_FINALITY,
 ): Promise<VersionedTransactionResponse | null> => {
   const latestBlockHash = await connection.getLatestBlockhash();
   await connection.confirmTransaction(
@@ -121,7 +141,7 @@ export const getTxDetails = async (
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: sig,
     },
-    commitment
+    commitment,
   );
 
   return connection.getTransaction(sig, {

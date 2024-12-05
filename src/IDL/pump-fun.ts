@@ -19,7 +19,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -31,7 +31,7 @@ export type PumpFun = {
         {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
-        }
+        },
       ];
       args: [];
     },
@@ -48,7 +48,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -68,7 +68,7 @@ export type PumpFun = {
         {
           name: "program";
           address: "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
-        }
+        },
       ];
       args: [
         {
@@ -94,7 +94,7 @@ export type PumpFun = {
         {
           name: "feeBasisPoints";
           type: "u64";
-        }
+        },
       ];
     },
     {
@@ -127,9 +127,9 @@ export type PumpFun = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
-              }
+              },
             ];
           };
         },
@@ -153,13 +153,13 @@ export type PumpFun = {
                   117,
                   114,
                   118,
-                  101
+                  101,
                 ];
               },
               {
                 kind: "account";
                 path: "mint";
-              }
+              },
             ];
           };
         },
@@ -176,7 +176,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -217,7 +217,7 @@ export type PumpFun = {
         {
           name: "program";
           address: "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
-        }
+        },
       ];
       args: [
         {
@@ -231,7 +231,7 @@ export type PumpFun = {
         {
           name: "uri";
           type: "string";
-        }
+        },
       ];
     },
     {
@@ -246,7 +246,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -280,13 +280,13 @@ export type PumpFun = {
                   117,
                   114,
                   118,
-                  101
+                  101,
                 ];
               },
               {
                 kind: "account";
                 path: "mint";
-              }
+              },
             ];
           };
         },
@@ -324,7 +324,7 @@ export type PumpFun = {
         {
           name: "program";
           address: "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
-        }
+        },
       ];
       args: [
         {
@@ -334,7 +334,7 @@ export type PumpFun = {
         {
           name: "maxSolCost";
           type: "u64";
-        }
+        },
       ];
     },
     {
@@ -350,7 +350,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -384,13 +384,13 @@ export type PumpFun = {
                   117,
                   114,
                   118,
-                  101
+                  101,
                 ];
               },
               {
                 kind: "account";
                 path: "mint";
-              }
+              },
             ];
           };
         },
@@ -428,7 +428,7 @@ export type PumpFun = {
         {
           name: "program";
           address: "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
-        }
+        },
       ];
       args: [
         {
@@ -438,14 +438,14 @@ export type PumpFun = {
         {
           name: "minSolOutput";
           type: "u64";
-        }
+        },
       ];
     },
     {
       name: "withdraw";
       discriminator: [183, 18, 70, 156, 148, 109, 161, 34];
       docs: [
-        "Allows the admin to withdraw liquidity for a migration once the bonding curve completes"
+        "Allows the admin to withdraw liquidity for a migration once the bonding curve completes",
       ];
       accounts: [
         {
@@ -456,7 +456,7 @@ export type PumpFun = {
               {
                 kind: "const";
                 value: [103, 108, 111, 98, 97, 108];
-              }
+              },
             ];
           };
         },
@@ -490,13 +490,13 @@ export type PumpFun = {
                   117,
                   114,
                   118,
-                  101
+                  101,
                 ];
               },
               {
                 kind: "account";
                 path: "mint";
-              }
+              },
             ];
           };
         },
@@ -534,10 +534,10 @@ export type PumpFun = {
         {
           name: "program";
           address: "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P";
-        }
+        },
       ];
       args: [];
-    }
+    },
   ];
   accounts: [
     {
@@ -547,7 +547,7 @@ export type PumpFun = {
     {
       name: "global";
       discriminator: [167, 232, 232, 177, 200, 108, 114, 127];
-    }
+    },
   ];
   events: [
     {
@@ -565,7 +565,7 @@ export type PumpFun = {
     {
       name: "setParamsEvent";
       discriminator: [223, 195, 159, 246, 62, 48, 143, 131];
-    }
+    },
   ];
   types: [
     {
@@ -604,7 +604,7 @@ export type PumpFun = {
           {
             name: "feeBasisPoints";
             type: "u64";
-          }
+          },
         ];
       };
     },
@@ -616,7 +616,7 @@ export type PumpFun = {
           {
             name: "lastWithdrawTimestamp";
             type: "i64";
-          }
+          },
         ];
       };
     },
@@ -648,7 +648,7 @@ export type PumpFun = {
           {
             name: "complete";
             type: "bool";
-          }
+          },
         ];
       };
     },
@@ -686,7 +686,7 @@ export type PumpFun = {
             name: "user";
             type: "pubkey";
             index: false;
-          }
+          },
         ];
       };
     },
@@ -744,7 +744,7 @@ export type PumpFun = {
             name: "realTokenReserves";
             type: "u64";
             index: false;
-          }
+          },
         ];
       };
     },
@@ -772,7 +772,7 @@ export type PumpFun = {
             name: "timestamp";
             type: "i64";
             index: false;
-          }
+          },
         ];
       };
     },
@@ -810,10 +810,10 @@ export type PumpFun = {
             name: "feeBasisPoints";
             type: "u64";
             index: false;
-          }
+          },
         ];
       };
-    }
+    },
   ];
   errors: [
     {
@@ -860,6 +860,6 @@ export type PumpFun = {
       code: 6008;
       name: "WithdrawTooFrequent";
       msg: "Withdraw too frequent";
-    }
+    },
   ];
 };
