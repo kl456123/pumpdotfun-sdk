@@ -63,6 +63,12 @@ async function processCreateEvent(sdk: PumpFunSDK, event: CreateEvent) {
   const triggeredTasks = sniperTasks.filter((task) =>
     isTriggeredForCreateEvent(task.filter, event),
   );
+
+  // skip when no any triggered tasks
+  if(triggeredTasks.length==0) {
+      return;
+  }
+
   for (const task of triggeredTasks) {
     let buyResults = await sdk.buy(
       task.keypair,
@@ -78,13 +84,6 @@ async function processCreateEvent(sdk: PumpFunSDK, event: CreateEvent) {
       console.log("Buy failed");
     }
   }
-
-  // remove triggered tasks
-  const executedTaskIds = new Set();
-  triggeredTasks.forEach(executedTaskIds.add);
-  sniperTasks = sniperTasks.filter(
-    (sniperTask) => !executedTaskIds.has(sniperTask.taskId),
-  );
 }
 
 interface LimitOrder {
@@ -125,17 +124,21 @@ function isTriggered(limitOrder: LimitOrder, price: bigint): boolean {
 async function processTradeEvent(sdk: PumpFunSDK, tradeEvent: TradeEvent) {
   const { solAmount, tokenAmount, mint } = tradeEvent;
   // both of them use the same decimal
-  const price = solAmount * PRICE_BASE / tokenAmount;
+  const price = tokenAmount? BigInt(0): solAmount * PRICE_BASE / tokenAmount;
 
   const triggeredOrder = limitOrders.filter(
     (order) => order.mint.equals(mint) && isTriggered(order, price),
   );
+  // skip when no any matched orders
+  if(triggeredOrder.length==0){
+      return;
+  }
 
   await executeOrders(sdk, triggeredOrder);
 
   // remove fulfilled orders from orderbook
   const fulfilledOrderIds = new Set();
-  triggeredOrder.forEach(fulfilledOrderIds.add);
+  triggeredOrder.forEach(order=>fulfilledOrderIds.add(order.orderId));
   limitOrders = limitOrders.filter(
     (order) => !fulfilledOrderIds.has(order.orderId),
   );
@@ -201,7 +204,7 @@ const main = async () => {
   let createEvent = sdk.addEventListener(
     "createEvent",
     async (event, slot, signature) => {
-      // console.log("createEvent", event);
+      console.log("createEvent", event);
       await processCreateEvent(sdk, event);
     },
   );
