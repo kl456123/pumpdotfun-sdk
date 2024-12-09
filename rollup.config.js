@@ -21,11 +21,7 @@ export default {
       outputToFilesystem: false,
     }),
   ],
-  external: [
-    "@coral-xyz/borsh",
-    "@solana/web3.js",
-    "@solana/spl-token"
-  ],
+  external: ["@coral-xyz/borsh", "@solana/web3.js", "@solana/spl-token"],
   output: {
     file: "dist/browser/index.js",
     format: "es",

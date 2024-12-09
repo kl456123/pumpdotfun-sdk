@@ -10,9 +10,7 @@ The `PumpDotFunSDK` is designed to interact with the Pump.fun decentralized appl
 
 ## Installation
 
-`
-npm i pumpdotfun-sdk
-`
+`npm i pumpdotfun-sdk`
 
 ## Usage Example
 
@@ -20,9 +18,7 @@ First you need to create a `.env` file and set your RPC URL like in the `.env.ex
 
 Then you need to fund an account with atleast 0.004 SOL that is generated when running the command below
 
-`
-npx ts-node example/basic/index.ts
-`
+`npx ts-node example/basic/index.ts`
 
 ```typescript
 import dotenv from "dotenv";
@@ -69,7 +65,7 @@ const createAndBuyToken = async (sdk, testAccount, mint) => {
     {
       unitLimit: 250000,
       unitPrice: 250000,
-    }
+    },
   );
 
   if (createResults.success) {
@@ -89,12 +85,15 @@ const buyTokens = async (sdk, testAccount, mint) => {
     {
       unitLimit: 250000,
       unitPrice: 250000,
-    }
+    },
   );
 
   if (buyResults.success) {
     printSPLBalance(sdk.connection, mint.publicKey, testAccount.publicKey);
-    console.log("Bonding curve after buy", await sdk.getBondingCurveAccount(mint.publicKey));
+    console.log(
+      "Bonding curve after buy",
+      await sdk.getBondingCurveAccount(mint.publicKey),
+    );
   } else {
     console.log("Buy failed");
   }
@@ -104,7 +103,7 @@ const sellTokens = async (sdk, testAccount, mint) => {
   const currentSPLBalance = await getSPLBalance(
     sdk.connection,
     mint.publicKey,
-    testAccount.publicKey
+    testAccount.publicKey,
   );
   console.log("currentSPLBalance", currentSPLBalance);
 
@@ -117,13 +116,25 @@ const sellTokens = async (sdk, testAccount, mint) => {
       {
         unitLimit: 250000,
         unitPrice: 250000,
-      }
+      },
     );
 
     if (sellResults.success) {
-      await printSOLBalance(sdk.connection, testAccount.publicKey, "Test Account keypair");
-      printSPLBalance(sdk.connection, mint.publicKey, testAccount.publicKey, "After SPL sell all");
-      console.log("Bonding curve after sell", await sdk.getBondingCurveAccount(mint.publicKey));
+      await printSOLBalance(
+        sdk.connection,
+        testAccount.publicKey,
+        "Test Account keypair",
+      );
+      printSPLBalance(
+        sdk.connection,
+        mint.publicKey,
+        testAccount.publicKey,
+        "After SPL sell all",
+      );
+      console.log(
+        "Bonding curve after sell",
+        await sdk.getBondingCurveAccount(mint.publicKey),
+      );
     } else {
       console.log("Sell failed");
     }
@@ -139,14 +150,23 @@ const main = async () => {
     const testAccount = getOrCreateKeypair(KEYS_FOLDER, "test-account");
     const mint = getOrCreateKeypair(KEYS_FOLDER, "mint");
 
-    await printSOLBalance(connection, testAccount.publicKey, "Test Account keypair");
+    await printSOLBalance(
+      connection,
+      testAccount.publicKey,
+      "Test Account keypair",
+    );
 
     const globalAccount = await sdk.getGlobalAccount();
     console.log(globalAccount);
 
-    const currentSolBalance = await connection.getBalance(testAccount.publicKey);
+    const currentSolBalance = await connection.getBalance(
+      testAccount.publicKey,
+    );
     if (currentSolBalance === 0) {
-      console.log("Please send some SOL to the test-account:", testAccount.publicKey.toBase58());
+      console.log(
+        "Please send some SOL to the test-account:",
+        testAccount.publicKey.toBase58(),
+      );
       return;
     }
 
@@ -170,11 +190,9 @@ const main = async () => {
 main();
 ```
 
-
 ### PumpDotFunSDK Class
 
 The `PumpDotFunSDK` class provides methods to interact with the PumpFun protocol. Below are the method signatures and their descriptions.
-
 
 #### createAndBuy
 
@@ -314,19 +332,28 @@ const getProvider = () => {
 };
 
 const setupEventListeners = async (sdk) => {
-  const createEventId = sdk.addEventListener("createEvent", (event, slot, signature) => {
-    console.log("createEvent", event, slot, signature);
-  });
+  const createEventId = sdk.addEventListener(
+    "createEvent",
+    (event, slot, signature) => {
+      console.log("createEvent", event, slot, signature);
+    },
+  );
   console.log("Subscribed to createEvent with ID:", createEventId);
 
-  const tradeEventId = sdk.addEventListener("tradeEvent", (event, slot, signature) => {
-    console.log("tradeEvent", event, slot, signature);
-  });
+  const tradeEventId = sdk.addEventListener(
+    "tradeEvent",
+    (event, slot, signature) => {
+      console.log("tradeEvent", event, slot, signature);
+    },
+  );
   console.log("Subscribed to tradeEvent with ID:", tradeEventId);
 
-  const completeEventId = sdk.addEventListener("completeEvent", (event, slot, signature) => {
-    console.log("completeEvent", event, slot, signature);
-  });
+  const completeEventId = sdk.addEventListener(
+    "completeEvent",
+    (event, slot, signature) => {
+      console.log("completeEvent", event, slot, signature);
+    },
+  );
   console.log("Subscribed to completeEvent with ID:", completeEventId);
 };
 

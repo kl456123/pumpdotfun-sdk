@@ -1,4 +1,8 @@
-import { PublicKey, VersionedTransactionResponse } from "@solana/web3.js";
+import {
+  PublicKey,
+  VersionedTransactionResponse,
+  Keypair,
+} from "@solana/web3.js";
 
 export type CreateTokenMetadata = {
   name: string;
@@ -78,3 +82,25 @@ export type TransactionResult = {
   results?: VersionedTransactionResponse;
   success: boolean;
 };
+
+export interface Filter {
+  ticker?: string;
+  caseSensetive?: boolean;
+  mint?: PublicKey;
+}
+
+export interface SniperTask {
+  taskId: string;
+  filter: Filter;
+  keypair: Keypair;
+  buyAmountSol: bigint;
+}
+
+export interface LimitOrder {
+  orderId: string;
+  isBuy: boolean;
+  mint: PublicKey;
+  solAmount: bigint;
+  tokenAmount: bigint;
+  keypair: Keypair;
+}
